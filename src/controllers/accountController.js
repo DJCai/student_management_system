@@ -4,6 +4,12 @@ const MongoClient = require('mongodb').MongoClient;
 //导入生成验证码的模块
 var captchapng = require('captchapng');
 
+ //数据库
+const url = 'mongodb://localhost:27017';
+ // 数据库名
+const dbName = 'szhmqd21';
+
+
 //处理最后的环节
 //获取登录页面
 exports.getloginPage = (req, res) => {
@@ -24,12 +30,9 @@ exports.register = (req, res) => {
         status: 0,
         message: "注册成功"
     };
-    //数据库
-    const url = 'mongodb://localhost:27017';
-    MongoClient.connect(url, function (err, client) {
+   
+    MongoClient.connect(url,{ useNewUrlParser: true }, function (err, client) {
 
-        // 数据库名
-        const dbName = 'szhmqd21';
         const db = client.db(dbName);
         // 拿到集合名
         const collection = db.collection('accountInfo');
@@ -83,9 +86,38 @@ exports.fetchvcode = (req, res) => {
 }
 
 /**最终处理
- * 
+ * 登录处理
  */
 //
 exports.login = (req, res) => {
-    res.sendFile(path.join(__dirname, "../statics/views/register.html"));
+    const result = {status:0,message:"登陆成功"};
+
+    //判断验证码是否正确
+    if(req.body.vcode != req.session.vcode){
+        result.status =1;
+        result.message = "验证码错误";
+        res.json(result);
+        return;
+    }
+
+    MongoClient.connect(url,{ useNewUrlParser: true }, function (err, client) {
+
+        //主要是查询数据库中是否有该用户名,及密码,若无,表示登录失败,
+        const db = client.db(dbName);
+        // 拿到集合名
+        const collection = db.collection('accountInfo');
+        //查询是否有该用户名
+        collection.findOne({
+            username: req.body.username,password:req.body.password
+        }, (err, doc) => {
+            if (doc==null) {
+                //表明没有该用户
+                client.close();
+                result.status = 2;
+                result.message = "用户名或密码错误"
+            } 
+            res.json(result);
+        })
+    });
+
 }

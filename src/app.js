@@ -17,6 +17,9 @@ app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
 const accountRouter = require(path.join(__dirname,"./routers/accountRouter.js"));
 app.use("/account",accountRouter)
 
+const managementRouter = require(path.join(__dirname,"./routers/managementRouter.js"))
+app.use("/management",managementRouter);
+
 
 //开启服务
 app.listen(5566,"127.0.0.1",err=>{

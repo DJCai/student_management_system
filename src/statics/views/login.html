@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
     <title>登录页面</title>
 </head>
 <body>
@@ -61,6 +62,28 @@
     $("#vcodeimgId").click(function(){
         $(this).attr("src","/account/vcode?vcodeId="+Math.random());
     })
-    
+    // 点击提交按钮,进行ajax请求
+    function login(){
+        const password1 = $("#passwordId").val().trim();
+        const username = $("#usernameId").val().trim();
+        const password= md5(password1+"!@#ZZZ-_-");
+        const vcode = $("#vcodeId").val().trim();
+        if(password1.length==0 ||username.length==0 || vcode.lenght==0 ){
+            alert("登录信息请填写完全");
+            return;
+        }
+        
+        $.post("/account/login",{username,password,vcode},result=>{
+            if(result.status !==0){
+                alert(result.message);
+                //刷新验证码
+                $("#vcodeimgId").click();
+            }else{
+                //跳到学生管理界面
+                window.location.href = "/management/list";
+            }
+        })
+
+    }
 </script>
 </html>
