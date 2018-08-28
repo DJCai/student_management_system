@@ -57,5 +57,10 @@
     function register(){
         window.location.href = "/account/register"
     }
+    //点击更换验证码
+    $("#vcodeimgId").click(function(){
+        $(this).attr("src","/account/vcode?vcodeId="+Math.random());
+    })
+    
 </script>
 </html>

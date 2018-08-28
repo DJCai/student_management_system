@@ -18,8 +18,11 @@ accountRounter.get("/register",accountCtrl.getregisterPage);
 //注册功能
 accountRounter.post("/register",accountCtrl.register);
 
+//获取验证码的功能
+accountRounter.get("/vcode",accountCtrl.fetchvcode);
+
 //登录功能
-// accountRounter.post("/login",accountCtrl.login);
+accountRounter.post("/login",accountCtrl.login);
 
 
 

@@ -1,13 +1,8 @@
 const path = require("path");
-//导入数据库的模板
+//导入数据库的模块
 const MongoClient = require('mongodb').MongoClient;
-
-// Connection URL
-const url = 'mongodb://localhost:27017';
-
-// Database Name
-const dbName = 'szhmqd21';
-
+//导入生成验证码的模块
+var captchapng = require('captchapng');
 
 //处理最后的环节
 //获取登录页面
@@ -19,7 +14,9 @@ exports.getregisterPage = (req, res) => {
     res.sendFile(path.join(__dirname, "../statics/views/register.html"));
 }
 
-
+/**
+ * 最终处理: 把注册信息存储起来,并把注册结果返回给浏览器
+ */
 //注册功能
 exports.register = (req, res) => {
     //设置返回的状态
@@ -27,10 +24,10 @@ exports.register = (req, res) => {
         status: 0,
         message: "注册成功"
     };
+    //数据库
+    const url = 'mongodb://localhost:27017';
     MongoClient.connect(url, function (err, client) {
 
-        //数据,处理数据
-        const url = 'mongodb://localhost:27017';
         // 数据库名
         const dbName = 'szhmqd21';
         const db = client.db(dbName);
@@ -63,4 +60,32 @@ exports.register = (req, res) => {
     });
 }
 
-//登录功能
+//获取验证码功能
+/** 最终处理
+ * 获取验证码,并将验证码返回给浏览器
+ */
+exports.fetchvcode = (req, res) => {
+
+    const vcode = parseInt(Math.random() * 9000 + 1000);  
+    //存储到sesion中
+    req.session.vcode=vcode;
+    
+    const p = new captchapng(80, 30, vcode ); // width,height,numeric captcha
+    p.color(0, 0, 0, 0); // First color: background (red, green, blue, alpha)
+    p.color(80, 80, 80, 255); // Second color: paint (red, green, blue, alpha)
+
+    const img = p.getBase64();
+    const imgbase64 = new Buffer(img, 'base64');
+    res.writeHead(200, {
+        'Content-Type': 'image/png'
+    });
+    res.end(imgbase64);
+}
+
+/**最终处理
+ * 
+ */
+//
+exports.login = (req, res) => {
+    res.sendFile(path.join(__dirname, "../statics/views/register.html"));
+}
