@@ -1,9 +1,11 @@
 //导入文件
 const express = require("express");
 const path = require("path");
-
+const bodyParser = require("body-parser");
 //创建app应用
 const app = express();
+
+app.use(bodyParser.urlencoded({extended:false}));
 
 //集成路由
 
