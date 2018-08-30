@@ -15,7 +15,8 @@ accountRount.get("/login",accountCtrl.getLoginPage);
 
 //获取注册页面
 accountRount.get("/register",accountCtrl.getRegisterPage);
-
+//注册功能
+accountRount.post("/register",accountCtrl.register);
 
 
 //导出路由

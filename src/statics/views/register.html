@@ -44,15 +44,19 @@
     function register(){
         const username = $("#usernameId").val().trim();
         const password1 = $("#passwordId").val().trim();  
-        if(usename.length ==0 || password1.length==0){
+        if(username.length ==0 || password1.length==0){
             alert("请输入完全注册信息");
             return;
         }
         //密码加盐后md5加密
-        const password = md5(password+"!@#-_-");
+        const password = md5(password1+"!@#-_-");
         //发起post请求
         $.post("/account/register",{username,password},result=>{
-            //判断返回值
+            if(result.status!=0){
+                alert(result.message);
+            }else{
+                window.location.href = "/account/login";
+            }
         })
     }
 
