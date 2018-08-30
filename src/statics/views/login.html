@@ -58,7 +58,36 @@
     function register() {
         window.location.href = "/account/register";
     }
+    //点击刷新验证码
+    $("#vcodeimgId").click(function(){
+        // alert("a");
+        //更换图片路径
+       $(this).attr("src","/account/vcode?vcodeId="+Math.random());
+    })
+
     //点击登录,进行ajax请求(post方式)
+    function login(){
+        const username = $("#usernameId").val().trim();
+        const password1 = $("#passwordId").val().trim(); 
+        const vcode = $("#vcodeId").val().trim() ;
+        if(username.length ==0 || password1.length==0 || vcode.length==0){
+            alert("请输入完全登录信息");
+            return;
+        }
+        //密码加盐后md5加密
+        const password = md5(password1+"!@#-_-");
+        //发起post请求
+        $.post("/account/login",{username,password,vcode},result=>{
+            if(result.status!=0){
+                alert(result.message);
+                //刷新验证码
+                $("#vcodeimgId").click();
+            }else{
+                window.location.href = "/studentManagement/list";
+            }
+        })
+
+     }   
 
 </script>
 </html>
