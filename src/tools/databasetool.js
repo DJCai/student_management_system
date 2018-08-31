@@ -2,8 +2,12 @@ const MongoClient = require('mongodb').MongoClient
 // Connection URL
 const url = 'mongodb://localhost:27017';
  
+
 // Database Name
 const dbName = 'szhmqd21';
+
+const ObjectID=require("mongodb").ObjectID;
+exports.ObjectID = ObjectID;
 
  /**
   * 抽离出数据处理的共同部分
@@ -78,7 +82,12 @@ exports.findOne = (collectionName,param,callback)=>{
     });
 
 }
-
+/**
+ * 插入单条数据的方法
+ * @param {*} collectionName 
+ * @param {*} params 
+ * @param {*} callback 
+ */
 exports.insertOne= (collectionName,param,callback)=>{
     // MongoClient.connect(url, {
     //     useNewUrlParser: true
@@ -100,4 +109,29 @@ exports.insertOne= (collectionName,param,callback)=>{
             callback(err,doc);
         })
     });
+}
+/**
+ * 
+ * 修改单条数据的方法
+ */
+exports.updateOne=(collectionName,selection,param,callback)=>{
+    datamethod(collectionName,param,(collection,client)=>{
+        // 根据条件修改单条数据
+        collection.updateOne(selection,{$set:param},(err,doc)=>{
+           client.close();
+           callback(err,doc);
+       })
+   });
+}
+/**
+ * 删除某条数据
+ */
+exports.deleteOne=(collectionName,param,callback)=>{
+    datamethod(collectionName,param,(collection,client)=>{
+        // 根据条件删除单条数据
+        collection.deleteOne(param,(err,doc)=>{
+           client.close();
+           callback(err,doc);
+       })
+   });
 }
