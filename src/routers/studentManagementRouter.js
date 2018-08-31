@@ -28,5 +28,6 @@ managementRount.post("/edit/:studentId",managementCtrl.editstudent);
 //删除某条数据
 managementRount.get("/delete/:studentId",managementCtrl.deletestudent);
 
+
 //导出路由
 module.exports= managementRount;

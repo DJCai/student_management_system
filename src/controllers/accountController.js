@@ -95,7 +95,16 @@ exports.login=(req,res)=>{
             //表明登录错误
             result.status = 2;
             result.message = "用户名或密码错误";
+        }else{
+            req.session.username =req.body.username;
         }
         res.json(result);
     })
 }
+
+exports.logout=(req,res)=>{
+    //将session的值消除
+    req.session.username=null;
+    //跳转到登录界面
+    res.send(`<script>window.location.href="/account/login" </>script`)
+}   

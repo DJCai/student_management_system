@@ -1,4 +1,3 @@
-
 const path = require("path");
 //导入数据处理工具
 const dataBaseTool = require(path.join(__dirname,"../tools/databasetool.js"));
@@ -24,8 +23,8 @@ exports.getListPage=(req,res)=>{
         // xtpl方法
        const tplpath=path.join(__dirname,"../statics/views/list1.html");
         xtpl.renderFile(tplpath,{
-            students:docs
-            // keyword       
+            students:docs,
+            username:req.session.username       
         },function(error,content){ 
             //响应数据到模板中
             res.send(content);
@@ -38,10 +37,12 @@ exports.getListPage=(req,res)=>{
  */
 exports.getAddPage = (req,res)=>{
     // res.send("你好,未来");
+    console.log(req.session.username)
     const tplpath=path.join(__dirname,"../statics/views/add.html");
     xtpl.renderFile(tplpath,{
         // students:docs
-        // keyword       
+        // keyword
+        username:req.session.username       
     },function(error,content){ 
         //响应数据到模板中
         res.send(content);
@@ -73,12 +74,14 @@ exports.getEditPage=(req,res)=>{
     dataBaseTool.findOne("studentInfo",{_id:studentId},(err,doc)=>{
         //获取数据,通过模板渲染到页面中
         const tplpath=path.join(__dirname,"../statics/views/edit.html");
-        xtpl.renderFile(tplpath,doc,function(error,content){ 
+        xtpl.renderFile(tplpath,{
+            doc,
+            username:req.session.username  
+        },function(error,content){ 
         //响应数据到模板中
             res.send(content);
         });
     })
-    
 }
 
 /**

@@ -15,6 +15,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Use the session middleware
 app.use(session({ secret: 'keyboard cat',resave: true,saveUninitialized: false, cookie: { maxAge: 600000 }}))
 
+//进行权限控制
+app.all("/*",(req,res,next)=>{
+    if(req.url.includes("account")){    //用户管理的页面放行
+        next();
+    }else if(req.session.username){ 
+        next();                         //有登录的标志session的表示登录了,放行                    
+    }else{                              //提示用户没登录,跳到登录页面    
+        res.send(`<script>alert("您还没有登录,请先登录");window.location.href="/account/login"</script>`)
+    }
+})
+
 // Use the express-art-template middleware
 app.engine('art', require('express-art-template'));
 app.set('view options', {

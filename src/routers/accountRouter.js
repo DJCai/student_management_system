@@ -23,5 +23,8 @@ accountRount.get("/vcode",accountCtrl.getVcode);
 
 //登录功能
 accountRount.post("/login",accountCtrl.login);
+
+//登出功能
+accountRount.get("/logout",accountCtrl.logout);
 //导出路由
 module.exports= accountRount;
